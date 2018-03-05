@@ -678,8 +678,10 @@ MonoBehaviour:
   player: []
   baseSpeed: 10
   DashSpeed: 20
-  RubbishCap: 15
   BaseMashAmount: 10
+  controller: 0
+  time: 0
+  TimesMAshed: 0
 --- !u!54 &901433531
 Rigidbody:
   m_ObjectHideFlags: 0
