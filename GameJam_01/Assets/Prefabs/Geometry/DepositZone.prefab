@@ -38,6 +38,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4414715187527096}
   - component: {fileID: 114895853103803988}
+  - component: {fileID: 136738376301081382}
   m_Layer: 0
   m_Name: DepositZone
   m_TagString: Untagged
@@ -124,6 +125,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49a1ef38c49b4564ba97ad954152c935, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  drainRate: 0
+--- !u!136 &136738376301081382
+CapsuleCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1884486231597538}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.5
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!136 &136987326623171898
 CapsuleCollider:
   m_ObjectHideFlags: 1
