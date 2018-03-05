@@ -1,0 +1,23 @@
+fileFormatVersion: 2
+guid: b698bb18ef8fe4644bca2fae3e3f7d6a
+timeCreated: 1520212310
+licenseType: Free
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Finger Paint
+  fontNames:
+  - Finger Paint
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
