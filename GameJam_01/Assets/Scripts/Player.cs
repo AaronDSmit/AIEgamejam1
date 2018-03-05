@@ -1,11 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using XboxCtrlrInput;
 
 
 
-
-public class Player : MonoBehaviour {
+public class Player : MonoBehaviour
+{
 
     [SerializeField]
     private GameObject[] player;
@@ -16,50 +17,101 @@ public class Player : MonoBehaviour {
 
     [SerializeField]
     private float DashSpeed = 20;
-    [SerializeField]
-    private float RubbishCap = 15;
 
-    private float ROtatespeed = 300;
 
     [SerializeField]
     private int BaseMashAmount = 10;
 
-    private bool dash;
+    [SerializeField]
+    private XboxController controller;
+
+    [SerializeField]
+    private float time;
+
+    [SerializeField]
+    float TimesMAshed = 0;
+
+    private float timer;
+
+    private bool dash = false;
+    private bool CanMove = true;
 
     private int MashAmount;
 
+    private float y;
     private float x;
-    private float z;
 
 
     // Use this for initialization
-    void Awake ()
+    void Awake()
     {
         speed = baseSpeed;
         MashAmount = BaseMashAmount;
-	}
-	
-	// Update is called once per frame
-	void Update ()
+    }
+
+    // Update is called once per frame
+    void Update()
     {
 
-        x = Input.GetAxis("Horizontal") * Time.deltaTime * ROtatespeed;
-        z = Input.GetAxis("Vertical") * Time.deltaTime * speed;
+        if(!CanMove)
+        {
+            return;
+        }
 
-        transform.Rotate(0, x, 0);
-        transform.Translate(0, 0, z);
+        y = XCI.GetAxis(XboxAxis.LeftStickY, controller) * Time.deltaTime * speed;
+        x = XCI.GetAxis(XboxAxis.LeftStickX, controller) * Time.deltaTime * speed;
+
+
+
+
+        transform.position = new Vector3(transform.position.x + x, transform.position.y, transform.position.z + y);
+
+        rotation();
+        Dash();
+
+       
+
     }
 
 
     void buttonMash()
     {
-
-        speed = baseSpeed;
+       
+        CanMove = false;
+        if (XCI.GetButton(XboxButton.B , controller))
+        {
+            ++TimesMAshed;
+            if(TimesMAshed >= MashAmount)
+            {
+                CanMove = true;
+            }
+        }
 
     }
 
     void Dash()
     {
+        timer = 0;
+        timer += Time.deltaTime;
+
+        if (XCI.GetButtonDown(XboxButton.A))
+        {
+           
+            speed = DashSpeed;
+
+            
+            dash = true;
+
+          
+        }
+
+ 
+
+        if (timer > time)
+        {
+            speed = baseSpeed;
+            dash = false;
+        }
 
     }
 
@@ -67,11 +119,27 @@ public class Player : MonoBehaviour {
 
     private void OnCollisionEnter(Collision collision)
     {
-        if(speed >= DashSpeed)
+        if (speed >= DashSpeed)
         {
-            speed = 0;
+            
             buttonMash();
         }
     }
 
-}
+
+    void rotation()
+    {
+        y = XCI.GetAxisRaw(XboxAxis.LeftStickY, controller);
+        x = XCI.GetAxisRaw(XboxAxis.LeftStickX, controller);
+
+        Vector3 direction = new Vector3(x, 0, y);
+        transform.rotation = Quaternion.LookRotation(direction);
+
+    }
+
+    void setMove(bool move)
+    {
+        CanMove = move;
+    }
+
+ }
