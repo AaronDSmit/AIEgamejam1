@@ -29,8 +29,13 @@ public class Manager : MonoBehaviour
     private Text Timer;
 
     private Text player1Score;
-
     private Text player2Score;
+
+    private Image player1Metre;
+    private Image player2Metre;
+
+    private GameObject player1Win;
+    private GameObject player2Win;
 
     private GameObject dockPrompt;
 
@@ -112,14 +117,20 @@ public class Manager : MonoBehaviour
 
     void Start()
     {
-
         SceneManager.sceneLoaded += onSceneLoaded;
+
+        StartGame();
+    }
+
+    private void StartGame()
+    {
+        // get references to UI
 
         currentButton = 0;
         inMainMenu = true;
 
         buttons[currentButton].color = selectedColour;
-        waitingToStart = true;
+        waitingToStart = false;
     }
 
     private void StartRound()
@@ -326,9 +337,24 @@ public class Manager : MonoBehaviour
 
     private void EndRound()
     {
-        string winner = (p1Score > p2Score) ? "Player 1" : "Player 2";
+        if (p1Score > p2Score)
+        {
+            player1Win.SetActive(true);
+        }
+        else
+        {
+            player2Win.SetActive(true);
+        }
 
-        Debug.Log(winner + " has won!");
+        inMainMenu = true;
+        currentButton = 0;
+        Invoke("RestartGame", 3.0f);
+    }
+
+    private void RestartGame()
+    {
+        SceneManager.LoadScene(0);
+        StartGame();
     }
 
     private void CountDown()
@@ -426,12 +452,11 @@ public class Manager : MonoBehaviour
         }
     }
 
-
     private void onSceneLoaded(Scene newSecene, LoadSceneMode mode)
     {
         if (newSecene.buildIndex == 1)
         {
-            PlayerController playerOne = Instantiate(players[player1Char]).GetComponent<PlayerController>();
+            PlayerController playerOne = Instantiate(players[2]).GetComponent<PlayerController>();
             PlayerController playerTwo = Instantiate(players[player2Char]).GetComponent<PlayerController>();
 
             playerOne.SetController(XboxController.First);
@@ -440,6 +465,22 @@ public class Manager : MonoBehaviour
 
             dockPrompt = GameObject.FindGameObjectWithTag("DockPrompt");
             dockPrompt.SetActive(false);
+
+            player1Score = GameObject.FindGameObjectWithTag("p1score").GetComponent<Text>();
+            player2Score = GameObject.FindGameObjectWithTag("p2score").GetComponent<Text>();
+
+            player1Metre = GameObject.FindGameObjectWithTag("p1Metre").GetComponent<Image>();
+            player2Metre = GameObject.FindGameObjectWithTag("p2Metre").GetComponent<Image>();
+
+            player1Win = GameObject.FindGameObjectWithTag("p1Win");
+            player2Win = GameObject.FindGameObjectWithTag("p2Win");
+
+            player1Win.SetActive(false);
+            player2Win.SetActive(false);
+
+            Timer = GameObject.FindGameObjectWithTag("Time").GetComponent<Text>();
+
+            StartRound();
         }
     }
 }

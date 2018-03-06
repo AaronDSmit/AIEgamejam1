@@ -25,21 +25,21 @@ GameObject:
   - component: {fileID: 136829785701031124}
   m_Layer: 0
   m_Name: Player_03
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!1 &1713417347993762
+--- !u!1 &1922869310155248
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 5
   m_Component:
-  - component: {fileID: 4263618888134430}
-  - component: {fileID: 33483554820724012}
-  - component: {fileID: 23186398899428948}
+  - component: {fileID: 4971466624791420}
+  - component: {fileID: 33536315103606358}
+  - component: {fileID: 23282863304784132}
   m_Layer: 0
   m_Name: Roomba_Lloyd_Mesh
   m_TagString: Untagged
@@ -54,32 +54,32 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1025324955566218}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.223, y: 1, z: 2.57}
+  m_LocalPosition: {x: -4.223, y: 0.5, z: 2.57}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 4263618888134430}
+  - {fileID: 4971466624791420}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &4263618888134430
+--- !u!4 &4971466624791420
 Transform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1713417347993762}
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
+  m_GameObject: {fileID: 1922869310155248}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4220467877946660}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!23 &23186398899428948
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+--- !u!23 &23282863304784132
 MeshRenderer:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1713417347993762}
+  m_GameObject: {fileID: 1922869310155248}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -88,7 +88,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: bdf17c295ce66cd468e0c05a86bff341, type: 2}
+  - {fileID: 2100000, guid: 144ea7ffb7fad1f46bc16cab768107fe, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -108,13 +108,13 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!33 &33483554820724012
+--- !u!33 &33536315103606358
 MeshFilter:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1713417347993762}
-  m_Mesh: {fileID: 4300000, guid: cbed87dbeea25704b885d0616350b639, type: 3}
+  m_GameObject: {fileID: 1922869310155248}
+  m_Mesh: {fileID: 4300000, guid: 7ba0437fb562a5045b6d1278e803d8ec, type: 3}
 --- !u!54 &54923157618184100
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -163,11 +163,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 580ba17da3c0cea4d9f7b6393082664b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxRubbish: 0
-  dockTime: 0
+  maxRubbish: 100
+  dockTime: 1
   rubbishDumpParticle: {fileID: 0}
   controller: 0
-  currentRubbish: 0
+  currentRubbish: 50
+  canDock: 0
 --- !u!136 &136829785701031124
 CapsuleCollider:
   m_ObjectHideFlags: 1
