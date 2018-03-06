@@ -8,8 +8,9 @@ using XboxCtrlrInput;
 public class Player : MonoBehaviour
 {
 
+
     [SerializeField]
-    private GameObject[] player;
+    private GameObject playerFront;
     [SerializeField]
     private float baseSpeed = 10;
 
@@ -19,126 +20,257 @@ public class Player : MonoBehaviour
     private float DashSpeed = 20;
 
     [SerializeField]
-    private int BaseMashAmount = 10;
-
-    [SerializeField]
     private XboxController controller;
 
     [SerializeField]
-    private float time;
+    float TimesMAshed = 0;
+    [SerializeField]
+    private float Timer = 0.5f;
+    [SerializeField]
+    private float mashtimer = 10;
+
 
     [SerializeField]
-    float TimesMAshed = 0;
+    private Rigidbody rb;
+    [SerializeField]
+    Vector3 movement;
 
-    private float timer;
+    
+    [Range(0.0f, 1.0f)]
+    public float Mashdustpercent = 0.0f;
+
+    [Range(0.0f, 1.0f)]
+    public float dustpercent = 0.0f;
+
+    RaycastHit Hit;
+
+
+    Player oponent;
+    PlayerController rival;
+
+    PlayerController player;
+
 
     private bool dash = false;
-
-    [SerializeField]
     private bool CanMove = true;
 
-    private int MashAmount;
 
     private float y;
     private float x;
+
+    private float prevRotatex;
+    private float prevRotatey;
+
+    private float resetTimer;
+    private float resetMTimer;
+
+
+    bool mashhhh = false;
+    bool needMash = false;
 
 
     // Use this for initialization
     void Awake()
     {
+        prevRotatex = 0.0f;
+        prevRotatey = 0.0f;
         speed = baseSpeed;
-        MashAmount = BaseMashAmount;
+        resetTimer = Timer;
+        resetMTimer = mashtimer;
     }
 
     // Update is called once per frame
     void Update()
     {
-
+    
         if (!CanMove)
         {
             return;
         }
 
-        y = XCI.GetAxis(XboxAxis.LeftStickY, controller) * Time.deltaTime * speed;
-        x = XCI.GetAxis(XboxAxis.LeftStickX, controller) * Time.deltaTime * speed;
-
-        transform.position = new Vector3(transform.position.x + x, transform.position.y, transform.position.z + y);
-
-        rotation();
+        Move();
         Dash();
+       // buttonMash();
+
+        if (XCI.GetButtonDown(XboxButton.A, controller))
+        {
+            dash = true;
+            
+            
+        }
+         
+
+       
+
     }
 
 
-    void buttonMash()
-    {
-
-        CanMove = false;
-        if (XCI.GetButton(XboxButton.B, controller))
+   void buttonMash()
+   {
+       if(needMash)
         {
-            ++TimesMAshed;
-            if (TimesMAshed >= MashAmount)
+            mashtimer -= Time.fixedDeltaTime;
+            CanMove = false;
+
+            if (XCI.GetButtonUp(XboxButton.B, controller))
             {
-                CanMove = true;
+                mashhhh = true;
+            }
+
+
+            if (mashhhh)
+            {
+
+
+                ++TimesMAshed;
+
+                if (mashtimer <= 0)
+                {
+                    CanMove = true;
+                    ResetmashTimer();
+
+                    if (TimesMAshed > oponent.TimesMAshed)
+                    {
+                        rival.RemoveRubbish(Mashdustpercent);
+
+
+                    }
+                    else
+                    {
+                        player.RemoveRubbish(Mashdustpercent);
+                    }
+                }
+                mashhhh = false;
             }
         }
-
-    }
+   
+   }
 
     void Dash()
     {
-        timer = 0;
-        timer += Time.deltaTime;
+       
 
-        if (XCI.GetButtonDown(XboxButton.A))
+        if (dash)
         {
 
             speed = DashSpeed;
+            Timer -= Time.fixedDeltaTime;
 
+            if (Timer <= 0)
+            {
+                speed = baseSpeed;
+                dash = false;
 
-            dash = true;
-
-
+               ResetCoolTimer();
+             
+            }
         }
 
+ 
 
-
-        if (timer > time)
-        {
-            speed = baseSpeed;
-            dash = false;
-        }
+       
 
     }
 
 
 
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (speed >= DashSpeed)
-        {
+   private void OnCollisionEnter(Collision collision)
+   {
+       if(collision.gameObject.tag == "Player")
+       {
 
-            buttonMash();
-        }
-    }
+            oponent = collision.gameObject.GetComponent<Player>();
 
+           if (speed >= DashSpeed & collision.gameObject == playerFront)
+           {
+               needMash = true;
 
-    void rotation()
-    {
-        y = XCI.GetAxisRaw(XboxAxis.LeftStickY, controller);
-        x = XCI.GetAxisRaw(XboxAxis.LeftStickX, controller);
+           }
+           else if (speed >= DashSpeed)
+           {
+                rival.RemoveRubbish(dustpercent);
+           }
+           else
+           {
+               return;
+           }
+       }
 
-        Vector3 direction = new Vector3(x, 0, y);
+   }
 
-        if (direction != Vector3.zero)
-        {
-            transform.rotation = Quaternion.LookRotation(direction);
-        }
-
-    }
 
     public void setMove(bool move)
     {
         CanMove = move;
     }
 
+
+    void Move()
+    {
+        y = XCI.GetAxisRaw(XboxAxis.LeftStickY, controller);
+        x = XCI.GetAxisRaw(XboxAxis.LeftStickX, controller);
+
+
+        movement = new Vector3(x, 0, y);
+
+        if (x != 0 || y != 0)
+        {
+            rb.velocity = transform.forward * speed;
+        }
+        else
+        {
+            rb.velocity = Vector3.zero;
+
+        }
+
+        if (x == 0f)
+        {
+            x = prevRotatex;
+        }
+        else
+        {
+            prevRotatex = x;
+        }
+
+        if (y == 0f)
+        {
+            y = prevRotatey;
+        }
+
+        else
+        {
+            prevRotatey = y;
+        }
+
+        if (x != 0 || y != 0)
+        {
+            Vector3 direction = new Vector3(x, 0, y);
+
+
+            transform.rotation = Quaternion.LookRotation(direction);
+        }
+
+        
+
+
+    }
+
+    public void speedRubbish()
+    {
+
+    }
+
+
+    private void ResetCoolTimer()
+    {
+        Timer = resetTimer;
+    }
+
+    private void ResetmashTimer()
+    {
+        mashtimer = resetMTimer;
+    }
+
 }
+
+
