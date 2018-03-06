@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameJam_01", "Assembly-CSharp.csproj", "{C6825BCE-7E65-270F-A3D7-7EE825DDA94C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameJam_01", "Assembly-CSharp-Editor.csproj", "{742F0099-5126-FA20-BC40-566EECC7EB34}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +15,10 @@ Global
 		{C6825BCE-7E65-270F-A3D7-7EE825DDA94C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C6825BCE-7E65-270F-A3D7-7EE825DDA94C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C6825BCE-7E65-270F-A3D7-7EE825DDA94C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{742F0099-5126-FA20-BC40-566EECC7EB34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{742F0099-5126-FA20-BC40-566EECC7EB34}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{742F0099-5126-FA20-BC40-566EECC7EB34}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{742F0099-5126-FA20-BC40-566EECC7EB34}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

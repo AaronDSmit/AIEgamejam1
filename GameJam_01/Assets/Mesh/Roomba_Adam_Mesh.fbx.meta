@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: e95c851a0657e664eaa52b17ad567f99
-timeCreated: 1520291397
+guid: 48f9267d4eb86b544b29d3f0d7e8d141
+timeCreated: 1520308132
 licenseType: Free
 ModelImporter:
   serializedVersion: 22
@@ -31,7 +31,7 @@ ModelImporter:
     400020: Raised_Front
     400022: //RootNode
     400024: Side_clip
-    2100000: lambert2
+    2100000: Roomba_Adam_Material
     2300000: Antenna1
     2300002: Antenna_base
     2300004: Base
