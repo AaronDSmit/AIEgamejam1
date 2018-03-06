@@ -1,44 +1,28 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
 public class DepositZone : MonoBehaviour
 {
     [SerializeField]
-    [Tooltip("How much rubbish will be dropped off each second")]
-    private float drainRate;
-
-    private Manager manager;
-
-    private Player currentPlayer = null;
-
-    private bool canDock = true;
-
-    private void Awake()
-    {
-        manager = GameObject.FindObjectOfType<Manager>();
-    }
+    private PlayerController currentPlayer = null;
 
     private void OnTriggerEnter(Collider other)
     {
-        manager.DisplayDockPrompt(true);
-
-        if (canDock)
-            return;
-
         if (currentPlayer == null)
         {
-            Player contact = other.transform.GetComponent<Player>();
+            PlayerController contact = other.transform.GetComponent<PlayerController>();
 
             if (contact != null)
             {
                 currentPlayer = contact;
-                manager.AddScore(true, 5);
-                // contact.getRubbish() 
-                //contact.EmptyRubbish();
+
+
+                Manager.instance.DisplayDockPrompt(true);
+
+                currentPlayer.CanDock(true);
+                Manager.instance.AddScore(true, 5);
             }
-        }
-        else
-        {
-            currentPlayer = null;
         }
     }
 
@@ -46,15 +30,9 @@ public class DepositZone : MonoBehaviour
     {
         if (currentPlayer != null)
         {
+            currentPlayer.CanDock(false);
             currentPlayer = null;
-        }
-    }
-
-    private void DrainRubbish()
-    {
-        if (currentPlayer)
-        {
-            //currentPlayer.RemoveRubbish();
+            Manager.instance.DisplayDockPrompt(false);
         }
     }
 }

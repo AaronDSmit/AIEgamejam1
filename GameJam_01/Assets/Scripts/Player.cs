@@ -18,7 +18,6 @@ public class Player : MonoBehaviour
     [SerializeField]
     private float DashSpeed = 20;
 
-
     [SerializeField]
     private int BaseMashAmount = 10;
 
@@ -34,6 +33,8 @@ public class Player : MonoBehaviour
     private float timer;
 
     private bool dash = false;
+
+    [SerializeField]
     private bool CanMove = true;
 
     private int MashAmount;
@@ -53,7 +54,7 @@ public class Player : MonoBehaviour
     void Update()
     {
 
-        if(!CanMove)
+        if (!CanMove)
         {
             return;
         }
@@ -61,27 +62,21 @@ public class Player : MonoBehaviour
         y = XCI.GetAxis(XboxAxis.LeftStickY, controller) * Time.deltaTime * speed;
         x = XCI.GetAxis(XboxAxis.LeftStickX, controller) * Time.deltaTime * speed;
 
-
-
-
         transform.position = new Vector3(transform.position.x + x, transform.position.y, transform.position.z + y);
 
         rotation();
         Dash();
-
-       
-
     }
 
 
     void buttonMash()
     {
-       
+
         CanMove = false;
-        if (XCI.GetButton(XboxButton.B , controller))
+        if (XCI.GetButton(XboxButton.B, controller))
         {
             ++TimesMAshed;
-            if(TimesMAshed >= MashAmount)
+            if (TimesMAshed >= MashAmount)
             {
                 CanMove = true;
             }
@@ -96,16 +91,16 @@ public class Player : MonoBehaviour
 
         if (XCI.GetButtonDown(XboxButton.A))
         {
-           
+
             speed = DashSpeed;
 
-            
+
             dash = true;
 
-          
+
         }
 
- 
+
 
         if (timer > time)
         {
@@ -121,7 +116,7 @@ public class Player : MonoBehaviour
     {
         if (speed >= DashSpeed)
         {
-            
+
             buttonMash();
         }
     }
@@ -133,13 +128,17 @@ public class Player : MonoBehaviour
         x = XCI.GetAxisRaw(XboxAxis.LeftStickX, controller);
 
         Vector3 direction = new Vector3(x, 0, y);
-        transform.rotation = Quaternion.LookRotation(direction);
+
+        if (direction != Vector3.zero)
+        {
+            transform.rotation = Quaternion.LookRotation(direction);
+        }
 
     }
 
-    void setMove(bool move)
+    public void setMove(bool move)
     {
         CanMove = move;
     }
 
- }
+}
