@@ -9,20 +9,20 @@ public class PlayerController : MonoBehaviour
     private int maxRubbish;
 
     [SerializeField]
+    private int RubbishPerPickup = 10;
+
+    [SerializeField]
     private float dockTime;
 
     [SerializeField]
     private ParticleSystem rubbishDumpParticle;
 
-    [SerializeField]
     private XboxController controller;
 
-    [SerializeField]
     private float currentRubbish;
 
     private Player movement;
 
-    [SerializeField]
     private bool canDock = false;
 
     private void Awake()
@@ -64,11 +64,18 @@ public class PlayerController : MonoBehaviour
         get { return currentRubbish; }
     }
 
+    public float RubbishPercent
+    {
+        get { return currentRubbish / maxRubbish; }
+    }
+
     public void RemoveRubbish(float change)
     {
         currentRubbish -= change * currentRubbish;
 
         currentRubbish = Mathf.Clamp(currentRubbish, 0, maxRubbish);
+
+        Manager.instance.UpdateMetre(IsPlayerOne(), RubbishPercent);
     }
 
     private IEnumerator DrainRubbish()
@@ -82,13 +89,15 @@ public class PlayerController : MonoBehaviour
         float percent = 0;
 
         float from = currentRubbish;
-        int score = (int)(currentRubbish / dockTime) / 30;
+        int score = (int)(currentRubbish / dockTime) / RubbishPerPickup;
 
         while (percent < 1)
         {
             percent += Time.deltaTime * speed;
             currentRubbish = Mathf.Lerp(from, 0, percent);
             Manager.instance.AddScore(IsPlayerOne(), score);
+
+            Manager.instance.UpdateMetre(IsPlayerOne(), RubbishPercent);
 
             yield return null;
         }
@@ -103,11 +112,16 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.transform.CompareTag("Rubbish"))
         {
-            Destroy(collision.collider.gameObject);
+            if (currentRubbish < maxRubbish)
+            {
+                Destroy(collision.collider.gameObject);
 
-            currentRubbish += 20;
+                currentRubbish += RubbishPerPickup;
 
-            currentRubbish = Mathf.Clamp(currentRubbish, 0, maxRubbish);
+                currentRubbish = Mathf.Clamp(currentRubbish, 0, maxRubbish);
+
+                Manager.instance.UpdateMetre(IsPlayerOne(), RubbishPercent);
+            }
         }
     }
 

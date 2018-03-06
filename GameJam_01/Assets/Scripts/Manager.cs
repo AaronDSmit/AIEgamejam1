@@ -16,14 +16,14 @@ public class Manager : MonoBehaviour
 
     [Header("Round Time")]
     [SerializeField]
-    private int roundTimeMinutes;
+    private int roundTimeMinutes = 0;
 
     [SerializeField]
-    private int roundTimeSeconds;
+    private int roundTimeSeconds = 0;
 
     [SerializeField]
     [Tooltip("The rate at which the timer flashes while at 00:00")]
-    private float flashSpeed;
+    private float flashSpeed = 0.5f;
 
     [Header("UI References")]
     private Text Timer;
@@ -31,29 +31,31 @@ public class Manager : MonoBehaviour
     private Text player1Score;
     private Text player2Score;
 
-    private Image player1Metre;
-    private Image player2Metre;
+    private RectTransform player1Metre;
+    private RectTransform player2Metre;
 
     private GameObject player1Win;
     private GameObject player2Win;
 
     private GameObject dockPrompt;
 
-    private bool inMainMenu = false;
-    private bool inSelectMenu = false;
-
-    private bool waitingToStart = false;
+    private bool inMainMenu;
+    private bool inSelectMenu;
 
     private int currentMinute;
 
     private int currentSeconds;
 
+    private Transform p1SpawnPoint;
+
+    private Transform p2SpawnPoint;
+
     // Main Menu UI
 
+    [Header("Menu Variables")]
     [SerializeField]
     private GameObject[] players;
 
-    [SerializeField]
     private int currentButton;
 
     private bool canMove = true;
@@ -66,36 +68,45 @@ public class Manager : MonoBehaviour
     private float timeNextMoveP1;
     private float timeNextMoveP2;
 
-    [SerializeField]
-    private bool player1Ready = false;
+    private bool player1Ready;
 
     [SerializeField]
-    private bool player2Ready = false;
+    private bool player2Ready;
 
     [SerializeField]
-    private Vector2Int player1Index = new Vector2Int(0, 0);
+    private Vector2Int player1Index;
 
     [SerializeField]
-    private Vector2Int player2Index = new Vector2Int(6, 0);
+    private Vector2Int player2Index;
 
     private int player1Char = 0;
-
     private int player2Char = 1;
 
-    [SerializeField]
     private Text[] buttons;
 
-    [SerializeField]
     private GameObject MainMenu;
 
-    [SerializeField]
     private GameObject PlayerSelect;
+
+    private Image[,] selectionGrid;
 
     [SerializeField]
     private float buttonSelectDelay;
 
     [SerializeField]
     private Color selectedColour = Color.white;
+
+    [SerializeField]
+    private Sprite playerOneHighlight;
+
+    [SerializeField]
+    private Sprite playerTwoHighlight;
+
+    [SerializeField]
+    private Sprite defaultBorder;
+
+    [SerializeField]
+    private Sprite lockedInBorder;
 
     private void Awake()
     {
@@ -117,7 +128,7 @@ public class Manager : MonoBehaviour
 
     void Start()
     {
-        SceneManager.sceneLoaded += onSceneLoaded;
+        SceneManager.sceneLoaded += OnSceneLoaded;
 
         StartGame();
     }
@@ -125,12 +136,54 @@ public class Manager : MonoBehaviour
     private void StartGame()
     {
         // get references to UI
+        GameObject canvas = FindObjectOfType<Canvas>().gameObject;
+
+        if (canvas)
+        {
+            MainMenu = canvas.transform.GetChild(0).gameObject;
+
+            Button[] canvasButtons = canvas.GetComponentsInChildren<Button>();
+
+            buttons = new Text[canvasButtons.Length];
+
+            for (int i = 0; i < buttons.Length; i++)
+            {
+                buttons[i] = canvasButtons[i].GetComponent<Text>();
+            }
+
+            PlayerSelect = canvas.transform.GetChild(1).gameObject;
+
+            if (PlayerSelect)
+            {
+                selectionGrid = new Image[7, 3];
+
+                for (int y = 0; y < 3; y++)
+                {
+                    for (int x = 0; x < 7; x++)
+                    {
+                        selectionGrid[x, y] = PlayerSelect.transform.GetChild(2).GetChild(y).GetChild(x).GetComponent<Image>();
+                        selectionGrid[x, y].sprite = defaultBorder;
+                    }
+                }
+
+                PlayerSelect.SetActive(false);
+            }
+        }
 
         currentButton = 0;
         inMainMenu = true;
+        inSelectMenu = false;
+
+        player1Ready = false;
+        player2Ready = false;
+
+        player1Index = new Vector2Int(0, 0);
+        player2Index = new Vector2Int(6, 0);
+
+        selectionGrid[player1Index.x, player1Index.y].sprite = playerOneHighlight;
+        selectionGrid[player2Index.x, player2Index.y].sprite = playerTwoHighlight;
 
         buttons[currentButton].color = selectedColour;
-        waitingToStart = false;
     }
 
     private void StartRound()
@@ -167,7 +220,7 @@ public class Manager : MonoBehaviour
                 timeNextMove = Time.time + buttonSelectDelay;
             }
 
-            if (XCI.GetButton(XboxButton.A, XboxController.All))
+            if (XCI.GetButtonUp(XboxButton.A, XboxController.All))
             {
                 if (currentButton == 0)
                 {
@@ -194,120 +247,133 @@ public class Manager : MonoBehaviour
         if (inSelectMenu)
         {
             // Player 1
-
-            // Move left/Right
-            if (canMoveP1 && Mathf.Abs(XCI.GetAxisRaw(XboxAxis.LeftStickX, XboxController.First)) > 0.5f)
+            if (!player1Ready)
             {
-                if (XCI.GetAxisRaw(XboxAxis.LeftStickX, XboxController.First) > 0.0f)
+                // Move left/Right
+                if (canMoveP1 && Mathf.Abs(XCI.GetAxisRaw(XboxAxis.LeftStickX, XboxController.First)) > 0.5f)
                 {
-                    player1Index.x = MoveX(player1Index.x, 1);
-                }
-                else
-                {
-                    player1Index.x = MoveX(player1Index.x, -1); ;
-                }
+                    if (XCI.GetAxisRaw(XboxAxis.LeftStickX, XboxController.First) > 0.0f)
+                    {
+                        selectionGrid[player1Index.x, player1Index.y].sprite = defaultBorder;
+                        player1Index.x = MoveX(player1Index.x, 1);
+                        selectionGrid[player1Index.x, player1Index.y].sprite = playerOneHighlight;
+                    }
+                    else
+                    {
+                        selectionGrid[player1Index.x, player1Index.y].sprite = defaultBorder;
+                        player1Index.x = MoveX(player1Index.x, -1); ;
+                        selectionGrid[player1Index.x, player1Index.y].sprite = playerOneHighlight;
+                    }
 
-                canMoveP1 = false;
-                timeNextMoveP1 = Time.time + buttonSelectDelay;
-            }
-
-            // Move up/down
-            if (canMoveP1 && Mathf.Abs(XCI.GetAxisRaw(XboxAxis.LeftStickY, XboxController.First)) > 0.5f)
-            {
-                if (XCI.GetAxisRaw(XboxAxis.LeftStickY, XboxController.First) > 0.0f)
-                {
-                    player1Index.y = MoveY(player1Index.y, -1);
-
-                }
-                else
-                {
-                    player1Index.y = MoveY(player1Index.y, 1);
+                    canMoveP1 = false;
+                    timeNextMoveP1 = Time.time + buttonSelectDelay;
                 }
 
-                canMoveP1 = false;
-                timeNextMoveP1 = Time.time + buttonSelectDelay;
-            }
+                // Move up/down
+                if (canMoveP1 && Mathf.Abs(XCI.GetAxisRaw(XboxAxis.LeftStickY, XboxController.First)) > 0.5f)
+                {
+                    if (XCI.GetAxisRaw(XboxAxis.LeftStickY, XboxController.First) > 0.0f)
+                    {
+                        selectionGrid[player1Index.x, player1Index.y].sprite = defaultBorder;
+                        player1Index.y = MoveY(player1Index.y, -1);
+                        selectionGrid[player1Index.x, player1Index.y].sprite = playerOneHighlight;
+                    }
+                    else
+                    {
+                        selectionGrid[player1Index.x, player1Index.y].sprite = defaultBorder;
+                        player1Index.y = MoveY(player1Index.y, 1);
+                        selectionGrid[player1Index.x, player1Index.y].sprite = playerOneHighlight;
+                    }
 
-            if (!canMoveP1 && Time.time > timeNextMoveP1)
-            {
-                canMoveP1 = true;
-            }
+                    canMoveP1 = false;
+                    timeNextMoveP1 = Time.time + buttonSelectDelay;
+                }
 
-            if (XCI.GetButton(XboxButton.A, XboxController.First))
-            {
-                player1Ready = true;
+                if (!canMoveP1 && Time.time > timeNextMoveP1)
+                {
+                    canMoveP1 = true;
+                }
+
+                if (XCI.GetButtonDown(XboxButton.A, XboxController.First))
+                {
+                    selectionGrid[player1Index.x, player1Index.y].sprite = lockedInBorder;
+                    player1Ready = true;
+                }
             }
 
             // Player 2
-            if (XCI.GetButton(XboxButton.A, XboxController.Second))
+            if (!player2Ready)
             {
-                player2Ready = true;
-            }
-
-            // Move left/Right
-            if (canMoveP2 && Mathf.Abs(XCI.GetAxisRaw(XboxAxis.LeftStickX, XboxController.Second)) > 0.5f)
-            {
-                if (XCI.GetAxisRaw(XboxAxis.LeftStickX, XboxController.Second) > 0.0f)
+                // Move left/Right
+                if (canMoveP2 && Mathf.Abs(XCI.GetAxisRaw(XboxAxis.LeftStickX, XboxController.Second)) > 0.5f)
                 {
-                    player2Index.x = MoveX(player2Index.x, 1);
-                }
-                else
-                {
-                    player2Index.x = MoveX(player2Index.x, -1); ;
-                }
+                    if (XCI.GetAxisRaw(XboxAxis.LeftStickX, XboxController.Second) > 0.0f)
+                    {
+                        selectionGrid[player2Index.x, player2Index.y].sprite = defaultBorder;
+                        player2Index.x = MoveX(player2Index.x, 1);
+                        selectionGrid[player2Index.x, player2Index.y].sprite = playerTwoHighlight;
+                    }
+                    else
+                    {
+                        selectionGrid[player2Index.x, player2Index.y].sprite = defaultBorder;
+                        player2Index.x = MoveX(player2Index.x, -1); ;
+                        selectionGrid[player2Index.x, player2Index.y].sprite = playerTwoHighlight;
+                    }
 
-                canMoveP2 = false;
-                timeNextMoveP2 = Time.time + buttonSelectDelay;
-            }
-
-            // Move up/down
-            if (canMoveP2 && Mathf.Abs(XCI.GetAxisRaw(XboxAxis.LeftStickY, XboxController.Second)) > 0.5f)
-            {
-                if (XCI.GetAxisRaw(XboxAxis.LeftStickY, XboxController.Second) > 0.0f)
-                {
-                    player2Index.y = MoveY(player2Index.y, -1);
-
-                }
-                else
-                {
-                    player2Index.y = MoveY(player2Index.y, 1);
+                    canMoveP2 = false;
+                    timeNextMoveP2 = Time.time + buttonSelectDelay;
                 }
 
-                canMoveP2 = false;
-                timeNextMoveP2 = Time.time + buttonSelectDelay;
+                // Move up/down
+                if (canMoveP2 && Mathf.Abs(XCI.GetAxisRaw(XboxAxis.LeftStickY, XboxController.Second)) > 0.5f)
+                {
+                    if (XCI.GetAxisRaw(XboxAxis.LeftStickY, XboxController.Second) > 0.0f)
+                    {
+                        selectionGrid[player2Index.x, player2Index.y].sprite = defaultBorder;
+                        player2Index.y = MoveY(player2Index.y, -1);
+                        selectionGrid[player2Index.x, player2Index.y].sprite = playerTwoHighlight;
+
+                    }
+                    else
+                    {
+                        selectionGrid[player2Index.x, player2Index.y].sprite = defaultBorder;
+                        player2Index.y = MoveY(player2Index.y, 1);
+                        selectionGrid[player2Index.x, player2Index.y].sprite = playerTwoHighlight;
+                    }
+
+                    canMoveP2 = false;
+                    timeNextMoveP2 = Time.time + buttonSelectDelay;
+                }
+
+                if (XCI.GetButtonDown(XboxButton.A, XboxController.Second))
+                {
+                    selectionGrid[player2Index.x, player2Index.y].sprite = lockedInBorder;
+                    player2Ready = true;
+                }
+
+                if (!canMoveP2 && Time.time > timeNextMoveP2)
+                {
+                    canMoveP2 = true;
+                }
             }
 
-            if (!canMoveP2 && Time.time > timeNextMoveP2)
-            {
-                canMoveP2 = true;
-            }
 
             if (player1Ready && player2Ready)
             {
                 buttons[2].color = selectedColour;
 
-                if (XCI.GetButton(XboxButton.A, XboxController.All))
+                if (XCI.GetButtonDown(XboxButton.A, XboxController.All))
                 {
                     inSelectMenu = false;
                     SceneManager.LoadScene(1);
                 }
             }
         }
-
-        if (waitingToStart)
-        {
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                StartRound();
-
-                waitingToStart = false;
-            }
-        }
     }
 
     private int MoveX(int value, int change)
     {
-        if (change > 0 && value < 5)
+        if (change > 0 && value < 6)
         {
             return value + 1;
         }
@@ -346,15 +412,24 @@ public class Manager : MonoBehaviour
             player2Win.SetActive(true);
         }
 
-        inMainMenu = true;
-        currentButton = 0;
         Invoke("RestartGame", 3.0f);
     }
 
     private void RestartGame()
     {
         SceneManager.LoadScene(0);
-        StartGame();
+    }
+
+    public void UpdateMetre(bool playerOne, float percent)
+    {
+        if (playerOne)
+        {
+            player1Metre.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 600 * percent);
+        }
+        else
+        {
+            player2Metre.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 600 * percent);
+        }
     }
 
     private void CountDown()
@@ -432,55 +507,54 @@ public class Manager : MonoBehaviour
 
     public void DisplayDockPrompt(bool display)
     {
-        dockPrompt.SetActive(display);
+        if (dockPrompt) dockPrompt.SetActive(display);
     }
 
     private void FlashTimer()
     {
         if (Timer)
         {
-            if (waitingToStart)
-            {
-                Timer.enabled = true;
-                Timer.text = "";
-            }
-            else
-            {
-                Timer.enabled = !Timer.enabled;
-                Invoke("FlashTimer", flashSpeed);
-            }
+            Timer.enabled = !Timer.enabled;
+            Invoke("FlashTimer", flashSpeed);
         }
     }
 
-    private void onSceneLoaded(Scene newSecene, LoadSceneMode mode)
+    private void OnSceneLoaded(Scene newSecene, LoadSceneMode mode)
     {
         if (newSecene.buildIndex == 1)
         {
-            PlayerController playerOne = Instantiate(players[2]).GetComponent<PlayerController>();
-            PlayerController playerTwo = Instantiate(players[player2Char]).GetComponent<PlayerController>();
+            p1SpawnPoint = GameObject.FindGameObjectWithTag("p1SpawnPoint").transform;
+            p2SpawnPoint = GameObject.FindGameObjectWithTag("p2SpawnPoint").transform;
+
+            PlayerController playerOne = Instantiate(players[2], p1SpawnPoint.position, Quaternion.identity).GetComponent<PlayerController>();
+            PlayerController playerTwo = Instantiate(players[player2Char], p2SpawnPoint.position, Quaternion.identity).GetComponent<PlayerController>();
 
             playerOne.SetController(XboxController.First);
             playerTwo.SetController(XboxController.Second);
 
-
             dockPrompt = GameObject.FindGameObjectWithTag("DockPrompt");
-            dockPrompt.SetActive(false);
+
+            if (dockPrompt) dockPrompt.SetActive(false);
 
             player1Score = GameObject.FindGameObjectWithTag("p1score").GetComponent<Text>();
             player2Score = GameObject.FindGameObjectWithTag("p2score").GetComponent<Text>();
 
-            player1Metre = GameObject.FindGameObjectWithTag("p1Metre").GetComponent<Image>();
-            player2Metre = GameObject.FindGameObjectWithTag("p2Metre").GetComponent<Image>();
+            player1Metre = GameObject.FindGameObjectWithTag("p1Metre").transform.GetChild(0).GetChild(0).GetComponent<RectTransform>();
+            player2Metre = GameObject.FindGameObjectWithTag("p2Metre").transform.GetChild(0).GetChild(0).GetComponent<RectTransform>();
 
             player1Win = GameObject.FindGameObjectWithTag("p1Win");
             player2Win = GameObject.FindGameObjectWithTag("p2Win");
 
-            player1Win.SetActive(false);
-            player2Win.SetActive(false);
+            if (player1Win) player1Win.SetActive(false);
+            if (player2Win) player2Win.SetActive(false);
 
             Timer = GameObject.FindGameObjectWithTag("Time").GetComponent<Text>();
 
             StartRound();
+        }
+        else if (newSecene.buildIndex == 0)
+        {
+            StartGame();
         }
     }
 }

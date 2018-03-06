@@ -14,6 +14,8 @@ TagManager:
   - p1Win
   - p2Win
   - Playerfront
+  - p1SpawnPoint
+  - p2SpawnPoint
   layers:
   - Default
   - TransparentFX
