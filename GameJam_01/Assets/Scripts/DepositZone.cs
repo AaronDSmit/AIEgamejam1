@@ -17,11 +17,10 @@ public class DepositZone : MonoBehaviour
             {
                 currentPlayer = contact;
 
-
                 Manager.instance.DisplayDockPrompt(true);
 
                 currentPlayer.CanDock(true);
-                Manager.instance.AddScore(true, 5);
+                Manager.instance.AddScore(contact.IsPlayerOne(), 5);
             }
         }
     }

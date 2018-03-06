@@ -45,6 +45,7 @@ public class Manager : MonoBehaviour
 
     // Main Menu UI
 
+    [SerializeField]
     private GameObject[] players;
 
     [SerializeField]
@@ -71,6 +72,10 @@ public class Manager : MonoBehaviour
 
     [SerializeField]
     private Vector2Int player2Index = new Vector2Int(6, 0);
+
+    private int player1Char = 0;
+
+    private int player2Char = 1;
 
     [SerializeField]
     private Text[] buttons;
@@ -107,6 +112,9 @@ public class Manager : MonoBehaviour
 
     void Start()
     {
+
+        SceneManager.sceneLoaded += onSceneLoaded;
+
         currentButton = 0;
         inMainMenu = true;
 
@@ -225,12 +233,51 @@ public class Manager : MonoBehaviour
                 player2Ready = true;
             }
 
+            // Move left/Right
+            if (canMoveP2 && Mathf.Abs(XCI.GetAxisRaw(XboxAxis.LeftStickX, XboxController.Second)) > 0.5f)
+            {
+                if (XCI.GetAxisRaw(XboxAxis.LeftStickX, XboxController.Second) > 0.0f)
+                {
+                    player2Index.x = MoveX(player2Index.x, 1);
+                }
+                else
+                {
+                    player2Index.x = MoveX(player2Index.x, -1); ;
+                }
+
+                canMoveP2 = false;
+                timeNextMoveP2 = Time.time + buttonSelectDelay;
+            }
+
+            // Move up/down
+            if (canMoveP2 && Mathf.Abs(XCI.GetAxisRaw(XboxAxis.LeftStickY, XboxController.Second)) > 0.5f)
+            {
+                if (XCI.GetAxisRaw(XboxAxis.LeftStickY, XboxController.Second) > 0.0f)
+                {
+                    player2Index.y = MoveY(player2Index.y, -1);
+
+                }
+                else
+                {
+                    player2Index.y = MoveY(player2Index.y, 1);
+                }
+
+                canMoveP2 = false;
+                timeNextMoveP2 = Time.time + buttonSelectDelay;
+            }
+
+            if (!canMoveP2 && Time.time > timeNextMoveP2)
+            {
+                canMoveP2 = true;
+            }
+
             if (player1Ready && player2Ready)
             {
                 buttons[2].color = selectedColour;
 
                 if (XCI.GetButton(XboxButton.A, XboxController.All))
                 {
+                    inSelectMenu = false;
                     SceneManager.LoadScene(1);
                 }
             }
@@ -376,6 +423,19 @@ public class Manager : MonoBehaviour
                 Timer.enabled = !Timer.enabled;
                 Invoke("FlashTimer", flashSpeed);
             }
+        }
+    }
+
+
+    private void onSceneLoaded(Scene newSecene, LoadSceneMode mode)
+    {
+        if (newSecene.buildIndex == 1)
+        {
+            PlayerController playerOne = Instantiate(players[player1Char]).GetComponent<PlayerController>();
+            PlayerController playerTwo = Instantiate(players[player2Char]).GetComponent<PlayerController>();
+
+            playerOne.SetController(XboxController.First);
+            playerTwo.SetController(XboxController.Second);
         }
     }
 }
