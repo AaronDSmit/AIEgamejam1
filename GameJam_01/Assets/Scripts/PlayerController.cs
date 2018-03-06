@@ -101,10 +101,23 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.transform.CompareTag("Rubbish"))
         {
-            Destroy(collision.transform.gameObject);
+            Destroy(collision.collider.gameObject);
+
             currentRubbish++;
 
             currentRubbish = Mathf.Clamp(currentRubbish, 0, maxRubbish);
         }
+    }
+
+    public void SetController(XboxController controls)
+    {
+        controller = controls;
+
+        GetComponent<Player>().setController(controls);
+    }
+
+    public bool IsPlayerOne()
+    {
+        return (int)controller == 1;
     }
 }
