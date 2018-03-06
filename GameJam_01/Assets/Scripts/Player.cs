@@ -30,7 +30,7 @@ public class Player : MonoBehaviour
     private float mashtimer = 10;
 
 
- 
+
     private Rigidbody rb;
 
     [SerializeField]
@@ -38,7 +38,7 @@ public class Player : MonoBehaviour
 
     [SerializeField]
     private float hitforce = 1000;
-    
+
     [Range(0.0f, 1.0f)]
     public float Mashdustpercent = 0.0f;
 
@@ -82,7 +82,7 @@ public class Player : MonoBehaviour
         resetMTimer = mashtimer;
 
         rb = GetComponent<Rigidbody>();
-		oponent = GetComponent<Player>();
+        oponent = GetComponent<Player>();
 
     }
 
@@ -90,13 +90,13 @@ public class Player : MonoBehaviour
     void Update()
     {
 
-		buttonMash();
-    
+        buttonMash();
+
         if (!CanMove)
         {
             rb.velocity = Vector3.zero;
             return;
-           
+
         }
 
         Move();
@@ -105,19 +105,19 @@ public class Player : MonoBehaviour
         if (XCI.GetButtonDown(XboxButton.A, controller))
         {
             dash = true;
-            
-            
-        }
-         
 
-       
+
+        }
+
+
+
 
     }
 
 
-   void buttonMash()
-   {
-       if(needMash)
+    void buttonMash()
+    {
+        if (needMash)
         {
             mashtimer -= Time.fixedDeltaTime;
             CanMove = false;
@@ -126,9 +126,9 @@ public class Player : MonoBehaviour
             {
                 mashhhh = true;
             }
-           
 
-      
+
+
 
             if (mashhhh)
             {
@@ -140,31 +140,31 @@ public class Player : MonoBehaviour
                 {
                     CanMove = true;
 
-					mashhhh = false;
-					needMash = false;
-					TimesMashed = 0;
+                    mashhhh = false;
+                    needMash = false;
+                    TimesMashed = 0;
                     ResetmashTimer();
 
-                   if (TimesMashed > oponent.TimesMashed)
+                    if (TimesMashed > oponent.TimesMashed)
                     {
                         rival.RemoveRubbish(Mashdustpercent);
 
 
-                   }
-                   else
-                   {
+                    }
+                    else
+                    {
                         player.RemoveRubbish(Mashdustpercent);
-                   }
+                    }
                 }
                 mashhhh = false;
             }
         }
-   
-   }
+
+    }
 
     void Dash()
     {
-       
+
 
         if (dash)
         {
@@ -177,23 +177,23 @@ public class Player : MonoBehaviour
                 speed = baseSpeed;
                 dash = false;
 
-               ResetCoolTimer();
-             
+                ResetCoolTimer();
+
             }
         }
 
- 
 
-       
+
+
 
     }
 
 
 
-   private void OnCollisionEnter(Collision collision)
-   {
-       if(collision.gameObject.tag == "Player")
-       {
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "Player")
+        {
             rival = collision.gameObject.GetComponent<PlayerController>();
 
             GameObject enemy = collision.gameObject;
@@ -202,34 +202,34 @@ public class Player : MonoBehaviour
 
             Vector3 direction = erb.transform.position - transform.position;
 
-    
+
 
             direction.Normalize();
 
-            
 
-          
+
+
             if (speed >= DashSpeed)
-           {
+            {
 
-				needMash = true;
-               rival.RemoveRubbish(dustpercent);
+                needMash = true;
+                rival.RemoveRubbish(dustpercent);
 
-               erb.AddForce(direction * hitforce, ForceMode.Impulse);
+                erb.AddForce(direction * hitforce, ForceMode.Impulse);
             }
-           else
-           {
-               return;
-           }
-       }
+            else
+            {
+                return;
+            }
+        }
 
-   }
+    }
 
 
     public void setMove(bool move)
     {
         CanMove = move;
-       
+
     }
 
 
@@ -278,7 +278,7 @@ public class Player : MonoBehaviour
             transform.rotation = Quaternion.LookRotation(direction);
         }
 
-        
+
 
 
     }
@@ -310,8 +310,6 @@ public class Player : MonoBehaviour
         Rigidbody erb = enemy.GetComponent<Rigidbody>();
 
         Vector3 direction = erb.transform.position - transform.position;
-
-
 
         direction.Normalize();
 

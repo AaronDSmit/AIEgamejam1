@@ -14,7 +14,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private float dockTime;
 
-    [SerializeField]
     private ParticleSystem rubbishDumpParticle;
 
     private XboxController controller;
@@ -28,6 +27,8 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         movement = GetComponent<Player>();
+
+        rubbishDumpParticle = GetComponentInChildren<ParticleSystem>();
     }
 
     public void Reset()

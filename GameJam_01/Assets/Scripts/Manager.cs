@@ -108,6 +108,10 @@ public class Manager : MonoBehaviour
     [SerializeField]
     private Sprite lockedInBorder;
 
+    private int gridWidth = 5;
+
+    private int gridHeight = 3;
+
     private void Awake()
     {
         if (instance == null)
@@ -155,11 +159,11 @@ public class Manager : MonoBehaviour
 
             if (PlayerSelect)
             {
-                selectionGrid = new Image[7, 3];
+                selectionGrid = new Image[gridWidth, gridHeight];
 
-                for (int y = 0; y < 3; y++)
+                for (int y = 0; y < gridHeight; y++)
                 {
-                    for (int x = 0; x < 7; x++)
+                    for (int x = 0; x < gridWidth; x++)
                     {
                         selectionGrid[x, y] = PlayerSelect.transform.GetChild(2).GetChild(y).GetChild(x).GetComponent<Image>();
                         selectionGrid[x, y].sprite = defaultBorder;
@@ -178,7 +182,7 @@ public class Manager : MonoBehaviour
         player2Ready = false;
 
         player1Index = new Vector2Int(0, 0);
-        player2Index = new Vector2Int(6, 0);
+        player2Index = new Vector2Int(4, 0);
 
         selectionGrid[player1Index.x, player1Index.y].sprite = playerOneHighlight;
         selectionGrid[player2Index.x, player2Index.y].sprite = playerTwoHighlight;
@@ -526,7 +530,11 @@ public class Manager : MonoBehaviour
             p1SpawnPoint = GameObject.FindGameObjectWithTag("p1SpawnPoint").transform;
             p2SpawnPoint = GameObject.FindGameObjectWithTag("p2SpawnPoint").transform;
 
-            PlayerController playerOne = Instantiate(players[2], p1SpawnPoint.position, Quaternion.identity).GetComponent<PlayerController>();
+
+            player1Char = player1Index.y * gridWidth + player1Index.x;
+            player2Char = player2Index.y * gridWidth + player2Index.x;
+
+            PlayerController playerOne = Instantiate(players[player1Char], p1SpawnPoint.position, Quaternion.identity).GetComponent<PlayerController>();
             PlayerController playerTwo = Instantiate(players[player2Char], p2SpawnPoint.position, Quaternion.identity).GetComponent<PlayerController>();
 
             playerOne.SetController(XboxController.First);
