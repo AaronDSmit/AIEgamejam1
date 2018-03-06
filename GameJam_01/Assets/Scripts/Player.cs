@@ -82,6 +82,7 @@ public class Player : MonoBehaviour
         resetMTimer = mashtimer;
 
         rb = GetComponent<Rigidbody>();
+
     }
 
     // Update is called once per frame
@@ -90,7 +91,9 @@ public class Player : MonoBehaviour
     
         if (!CanMove)
         {
+            rb.velocity = Vector3.zero;
             return;
+           
         }
 
         Move();
@@ -121,10 +124,9 @@ public class Player : MonoBehaviour
             {
                 mashhhh = true;
             }
-            Vector3 direction = oponent.rb.velocity;
-            direction = -oponent.transform.forward * (baseSpeed * 0.5f);
+           
 
-            direction.Normalize();
+      
 
             if (mashhhh)
             {
@@ -136,7 +138,6 @@ public class Player : MonoBehaviour
                 {
                     CanMove = true;
                     ResetmashTimer();
-                    oponent.rb.AddForce(direction * hitforce, ForceMode.Impulse);
 
                     if (TimesMashed > oponent.TimesMashed)
                     {
@@ -187,23 +188,34 @@ public class Player : MonoBehaviour
    {
        if(collision.gameObject.tag == "Player")
        {
-            Vector3 direction = oponent.rb.velocity;
-            direction = (-oponent.transform.forward) * (speed * 0.5f);
+            rival = collision.gameObject.GetComponent<PlayerController>();
+
+            GameObject enemy = collision.gameObject;
+
+            Rigidbody erb = enemy.GetComponent<Rigidbody>();
+
+            Vector3 direction = erb.transform.position - transform.position;
+
+    
 
             direction.Normalize();
 
             oponent = collision.gameObject.GetComponent<Player>();
 
-           if (speed >= DashSpeed & collision.gameObject == playerFront)
+           if (speed >= DashSpeed & collision.gameObject.tag == "Playerfront")
            {
                needMash = true;
+                if (mashtimer <= 0)
+                {
+                    erb.AddForce(direction * hitforce, ForceMode.Impulse);
+                }
 
            }
-           else if (speed >= 1)
+           else if (speed >= DashSpeed)
            {
-               // rival.RemoveRubbish(dustpercent);
+               rival.RemoveRubbish(dustpercent);
 
-               oponent.rb.AddForce(direction * hitforce, ForceMode.Impulse);
+               erb.AddForce(direction * hitforce, ForceMode.Impulse);
             }
            else
            {
@@ -271,10 +283,7 @@ public class Player : MonoBehaviour
 
     }
 
-    public void speedRubbish()
-    {
-        
-    }
+
 
 
     private void ResetCoolTimer()
