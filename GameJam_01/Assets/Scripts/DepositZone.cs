@@ -20,7 +20,6 @@ public class DepositZone : MonoBehaviour
                 Manager.instance.DisplayDockPrompt(true);
 
                 currentPlayer.CanDock(true);
-                Manager.instance.AddScore(contact.IsPlayerOne(), 5);
             }
         }
     }

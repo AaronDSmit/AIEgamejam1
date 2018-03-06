@@ -37,7 +37,7 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        if (canDock && XCI.GetButton(XboxButton.X, controller))
+        if (canDock && XCI.GetButton(XboxButton.X, controller) && currentRubbish > 0)
         {
             movement.setMove(false);
 
@@ -45,7 +45,6 @@ public class PlayerController : MonoBehaviour
             Manager.instance.DisplayDockPrompt(false);
 
             StartCoroutine("DrainRubbish");
-
             Invoke("ReleaseDock", dockTime);
         }
     }
@@ -83,11 +82,13 @@ public class PlayerController : MonoBehaviour
         float percent = 0;
 
         float from = currentRubbish;
+        int score = (int)(currentRubbish / dockTime) / 30;
 
         while (percent < 1)
         {
             percent += Time.deltaTime * speed;
             currentRubbish = Mathf.Lerp(from, 0, percent);
+            Manager.instance.AddScore(IsPlayerOne(), score);
 
             yield return null;
         }
@@ -104,7 +105,7 @@ public class PlayerController : MonoBehaviour
         {
             Destroy(collision.collider.gameObject);
 
-            currentRubbish++;
+            currentRubbish += 20;
 
             currentRubbish = Mathf.Clamp(currentRubbish, 0, maxRubbish);
         }
