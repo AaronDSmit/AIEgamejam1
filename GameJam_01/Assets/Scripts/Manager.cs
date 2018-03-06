@@ -45,6 +45,8 @@ public class Manager : MonoBehaviour
 
     // Main Menu UI
 
+    private GameObject[] players;
+
     [SerializeField]
     private int currentButton;
 
@@ -58,9 +60,11 @@ public class Manager : MonoBehaviour
     [SerializeField]
     private bool player2Ready = false;
 
-    private int player1Char;
+    [SerializeField]
+    private Vector2Int player1Index = new Vector2Int(0, 0);
 
-    private int player2Char;
+    [SerializeField]
+    private Vector2Int player2Index = new Vector2Int(6, 0);
 
     [SerializeField]
     private Text[] buttons;
@@ -99,9 +103,6 @@ public class Manager : MonoBehaviour
     {
         currentButton = 0;
         inMainMenu = true;
-
-        player1Char = 0;
-        player2Char = 0;
 
         buttons[currentButton].color = selectedColour;
         waitingToStart = true;
@@ -168,6 +169,66 @@ public class Manager : MonoBehaviour
         if (inSelectMenu)
         {
             // Player 1
+
+            // Move left/Right
+            if (canMove && Mathf.Abs(XCI.GetAxisRaw(XboxAxis.LeftStickX, XboxController.First)) > 0.5f)
+            {
+                if (XCI.GetAxisRaw(XboxAxis.LeftStickX, XboxController.First) > 0.0f)
+                {
+                    int value = MoveX(player1Index.x, 1);
+
+                    if (value != 0)
+                    {
+                        player1Index.x = value;
+                    }
+
+                }
+                else
+                {
+                    int value = MoveX(player1Index.x, -1); ;
+
+                    if (value != 0)
+                    {
+                        player1Index.x = value;
+                    }
+                }
+
+                canMove = false;
+                timeNextMove = Time.time + buttonSelectDelay;
+            }
+
+            // Move up/down
+            if (canMove && Mathf.Abs(XCI.GetAxisRaw(XboxAxis.LeftStickY, XboxController.First)) > 0.5f)
+            {
+                if (XCI.GetAxisRaw(XboxAxis.LeftStickY, XboxController.First) > 0.0f)
+                {
+                    int value = MoveY(player1Index.y, -1); ;
+
+                    if (value != 0)
+                    {
+                        player1Index.y = MoveY(player1Index.y, -1);
+                    }
+
+                }
+                else
+                {
+                    int value = MoveY(player1Index.y, 1); ;
+
+                    if (value != 0)
+                    {
+                        player1Index.y = MoveY(player1Index.y, 1);
+                    }
+                }
+
+                canMove = false;
+                timeNextMove = Time.time + buttonSelectDelay;
+            }
+
+            if (!canMove && Time.time > timeNextMove)
+            {
+                canMove = true;
+            }
+
             if (XCI.GetButton(XboxButton.A, XboxController.First))
             {
 
@@ -178,7 +239,6 @@ public class Manager : MonoBehaviour
             {
 
             }
-
 
             if (player1Ready && player2Ready)
             {
@@ -200,6 +260,36 @@ public class Manager : MonoBehaviour
                 waitingToStart = false;
             }
         }
+    }
+
+    private int MoveX(int value, int change)
+    {
+        if (change > 0 && value < 5)
+        {
+            return value + 1;
+        }
+
+        if (change < 0 && value > -1)
+        {
+            return value - 1;
+        }
+
+        return 0;
+    }
+
+    private int MoveY(int value, int change)
+    {
+        if (change > 0 && value < 2)
+        {
+            return value + 1;
+        }
+
+        if (change < 0 && value > -1)
+        {
+            return value - 1;
+        }
+
+        return 0;
     }
 
     private void EndRound()
