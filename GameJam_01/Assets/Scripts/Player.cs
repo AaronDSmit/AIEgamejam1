@@ -145,16 +145,16 @@ public class Player : MonoBehaviour
 					TimesMashed = 0;
                     ResetmashTimer();
 
-                   // if (TimesMashed > oponent.TimesMashed)
-                   // {
-                        //rival.RemoveRubbish(Mashdustpercent);
+                   if (TimesMashed > oponent.TimesMashed)
+                    {
+                        rival.RemoveRubbish(Mashdustpercent);
 
 
-                    //}
-                    //else
-                   // {
-                        //player.RemoveRubbish(Mashdustpercent);
-                   // }
+                   }
+                   else
+                   {
+                        player.RemoveRubbish(Mashdustpercent);
+                   }
                 }
                 mashhhh = false;
             }
@@ -208,23 +208,14 @@ public class Player : MonoBehaviour
 
             
 
-           if (collision.gameObject.tag == "Playerfront")
-           {
-               needMash = true;
-                if (mashtimer <= 0)
-                {
-                    erb.AddForce(direction * hitforce, ForceMode.Impulse);
-                }
-
-           }
-            else if (speed >= DashSpeed)
+          
+            if (speed >= DashSpeed)
            {
 
-				Debug.LogError ("NeededMash");
 				needMash = true;
-               //rival.RemoveRubbish(dustpercent);
+               rival.RemoveRubbish(dustpercent);
 
-               //erb.AddForce(direction * hitforce, ForceMode.Impulse);
+               erb.AddForce(direction * hitforce, ForceMode.Impulse);
             }
            else
            {
@@ -308,6 +299,36 @@ public class Player : MonoBehaviour
     public void setController(XboxController control)
     {
         controller = control;
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        rival = collision.gameObject.GetComponent<PlayerController>();
+
+        GameObject enemy = collision.gameObject;
+
+        Rigidbody erb = enemy.GetComponent<Rigidbody>();
+
+        Vector3 direction = erb.transform.position - transform.position;
+
+
+
+        direction.Normalize();
+
+        if (collision.gameObject.tag == "Playerfront")
+        {
+            needMash = true;
+            oponent.needMash = true;
+
+
+            if (mashtimer <= 0)
+            {
+                erb.AddForce(direction * hitforce, ForceMode.Impulse);
+
+
+            }
+
+        }
     }
 
 }
