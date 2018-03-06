@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using XboxCtrlrInput;
 
 public class PlayerController : MonoBehaviour
 {
@@ -10,17 +11,22 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private float dockTime;
 
-    private int currentRubbish;
+    [SerializeField]
+    private ParticleSystem rubbishDumpParticle;
+
+    [SerializeField]
+    private XboxController controller;
+
+    [SerializeField]
+    private float currentRubbish;
 
     private Player movement;
 
     private bool canDock = false;
 
-    private Manager manager;
-
     private void Awake()
     {
-        manager = GameObject.FindObjectOfType<Manager>();
+        movement = GetComponent<Player>();
     }
 
     public void Reset()
@@ -30,11 +36,14 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        if (canDock && Input.GetKeyDown(KeyCode.A))
+        if (canDock && XCI.GetButton(XboxButton.X, controller))
         {
-            // movement.setMove(false);
+            movement.setMove(false);
+
             canDock = false;
-            manager.DisplayDockPrompt(false);
+            Manager.instance.DisplayDockPrompt(false);
+
+            StartCoroutine("DrainRubbish");
 
             Invoke("ReleaseDock", dockTime);
         }
@@ -42,7 +51,7 @@ public class PlayerController : MonoBehaviour
 
     private void ReleaseDock()
     {
-        // movement.setMove(true);
+        movement.setMove(true);
     }
 
     public void CanDock(bool _canDock)
@@ -50,9 +59,42 @@ public class PlayerController : MonoBehaviour
         canDock = _canDock;
     }
 
+    public float Rubbish
+    {
+        get { return currentRubbish; }
+    }
+
+    public void RemoveRubbish(float change)
+    {
+        currentRubbish -= change * currentRubbish;
+
+        currentRubbish = Mathf.Clamp(currentRubbish, 0, maxRubbish);
+    }
+
     private IEnumerator DrainRubbish()
     {
-        yield return null;
+        if (rubbishDumpParticle)
+        {
+            rubbishDumpParticle.Play();
+        }
+
+        float speed = 1 / dockTime;
+        float percent = 0;
+
+        float from = currentRubbish;
+
+        while (percent < 1)
+        {
+            percent += Time.deltaTime * speed;
+            currentRubbish = Mathf.Lerp(from, 0, percent);
+
+            yield return null;
+        }
+
+        if (rubbishDumpParticle)
+        {
+            rubbishDumpParticle.Stop();
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
