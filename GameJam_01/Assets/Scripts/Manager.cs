@@ -436,6 +436,10 @@ public class Manager : MonoBehaviour
 
             playerOne.SetController(XboxController.First);
             playerTwo.SetController(XboxController.Second);
+
+
+            dockPrompt = GameObject.FindGameObjectWithTag("DockPrompt");
+            dockPrompt.SetActive(false);
         }
     }
 }
