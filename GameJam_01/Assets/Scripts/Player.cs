@@ -17,24 +17,27 @@ public class Player : MonoBehaviour
     private float speed;
 
     [SerializeField]
-    private float DashSpeed = 20;
+    private float DashSpeed = 50;
 
     [SerializeField]
     private XboxController controller;
 
+    float TimesMashed = 0;
+
     [SerializeField]
-    float TimesMAshed = 0;
-    [SerializeField]
-    private float Timer = 0.5f;
+    private float Timer = 0.1f;
     [SerializeField]
     private float mashtimer = 10;
 
 
-    [SerializeField]
+ 
     private Rigidbody rb;
+
     [SerializeField]
     Vector3 movement;
 
+    [SerializeField]
+    private float hitforce = 1000;
     
     [Range(0.0f, 1.0f)]
     public float Mashdustpercent = 0.0f;
@@ -44,7 +47,7 @@ public class Player : MonoBehaviour
 
     RaycastHit Hit;
 
-
+    [SerializeField]
     Player oponent;
     PlayerController rival;
 
@@ -77,6 +80,9 @@ public class Player : MonoBehaviour
         speed = baseSpeed;
         resetTimer = Timer;
         resetMTimer = mashtimer;
+
+        rb = GetComponent<Rigidbody>();
+
     }
 
     // Update is called once per frame
@@ -85,7 +91,9 @@ public class Player : MonoBehaviour
     
         if (!CanMove)
         {
+            rb.velocity = Vector3.zero;
             return;
+           
         }
 
         Move();
@@ -116,20 +124,22 @@ public class Player : MonoBehaviour
             {
                 mashhhh = true;
             }
+           
 
+      
 
             if (mashhhh)
             {
 
 
-                ++TimesMAshed;
+                ++TimesMashed;
 
                 if (mashtimer <= 0)
                 {
                     CanMove = true;
                     ResetmashTimer();
 
-                    if (TimesMAshed > oponent.TimesMAshed)
+                    if (TimesMashed > oponent.TimesMashed)
                     {
                         rival.RemoveRubbish(Mashdustpercent);
 
@@ -178,18 +188,35 @@ public class Player : MonoBehaviour
    {
        if(collision.gameObject.tag == "Player")
        {
+            rival = collision.gameObject.GetComponent<PlayerController>();
+
+            GameObject enemy = collision.gameObject;
+
+            Rigidbody erb = enemy.GetComponent<Rigidbody>();
+
+            Vector3 direction = erb.transform.position - transform.position;
+
+    
+
+            direction.Normalize();
 
             oponent = collision.gameObject.GetComponent<Player>();
 
-           if (speed >= DashSpeed & collision.gameObject == playerFront)
+           if (speed >= DashSpeed & collision.gameObject.tag == "Playerfront")
            {
                needMash = true;
+                if (mashtimer <= 0)
+                {
+                    erb.AddForce(direction * hitforce, ForceMode.Impulse);
+                }
 
            }
            else if (speed >= DashSpeed)
            {
-                rival.RemoveRubbish(dustpercent);
-           }
+               rival.RemoveRubbish(dustpercent);
+
+               erb.AddForce(direction * hitforce, ForceMode.Impulse);
+            }
            else
            {
                return;
@@ -202,6 +229,7 @@ public class Player : MonoBehaviour
     public void setMove(bool move)
     {
         CanMove = move;
+       
     }
 
 
@@ -255,10 +283,7 @@ public class Player : MonoBehaviour
 
     }
 
-    public void speedRubbish()
-    {
 
-    }
 
 
     private void ResetCoolTimer()
@@ -269,6 +294,11 @@ public class Player : MonoBehaviour
     private void ResetmashTimer()
     {
         mashtimer = resetMTimer;
+    }
+
+    public void setController(XboxController control)
+    {
+        controller = control;
     }
 
 }
