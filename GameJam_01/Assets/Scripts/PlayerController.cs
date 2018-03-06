@@ -22,6 +22,7 @@ public class PlayerController : MonoBehaviour
 
     private Player movement;
 
+    [SerializeField]
     private bool canDock = false;
 
     private void Awake()

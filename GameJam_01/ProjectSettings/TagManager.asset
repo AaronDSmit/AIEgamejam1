@@ -6,6 +6,13 @@ TagManager:
   tags:
   - Rubbish
   - DockPrompt
+  - Time
+  - p1score
+  - p2score
+  - p1Metre
+  - p2Metre
+  - p1Win
+  - p2Win
   layers:
   - Default
   - TransparentFX
