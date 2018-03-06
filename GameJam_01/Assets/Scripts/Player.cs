@@ -82,12 +82,15 @@ public class Player : MonoBehaviour
         resetMTimer = mashtimer;
 
         rb = GetComponent<Rigidbody>();
+		oponent = GetComponent<Player>();
 
     }
 
     // Update is called once per frame
     void Update()
     {
+
+		buttonMash();
     
         if (!CanMove)
         {
@@ -98,7 +101,6 @@ public class Player : MonoBehaviour
 
         Move();
         Dash();
-       // buttonMash();
 
         if (XCI.GetButtonDown(XboxButton.A, controller))
         {
@@ -120,7 +122,7 @@ public class Player : MonoBehaviour
             mashtimer -= Time.fixedDeltaTime;
             CanMove = false;
 
-            if (XCI.GetButtonUp(XboxButton.B, controller))
+            if (XCI.GetButtonUp(XboxButton.A, controller))
             {
                 mashhhh = true;
             }
@@ -137,18 +139,22 @@ public class Player : MonoBehaviour
                 if (mashtimer <= 0)
                 {
                     CanMove = true;
+
+					mashhhh = false;
+					needMash = false;
+					TimesMashed = 0;
                     ResetmashTimer();
 
-                    if (TimesMashed > oponent.TimesMashed)
-                    {
-                        rival.RemoveRubbish(Mashdustpercent);
+                   // if (TimesMashed > oponent.TimesMashed)
+                   // {
+                        //rival.RemoveRubbish(Mashdustpercent);
 
 
-                    }
-                    else
-                    {
-                        player.RemoveRubbish(Mashdustpercent);
-                    }
+                    //}
+                    //else
+                   // {
+                        //player.RemoveRubbish(Mashdustpercent);
+                   // }
                 }
                 mashhhh = false;
             }
@@ -200,9 +206,9 @@ public class Player : MonoBehaviour
 
             direction.Normalize();
 
-            oponent = collision.gameObject.GetComponent<Player>();
+            
 
-           if (speed >= DashSpeed & collision.gameObject.tag == "Playerfront")
+           if (collision.gameObject.tag == "Playerfront")
            {
                needMash = true;
                 if (mashtimer <= 0)
@@ -211,11 +217,14 @@ public class Player : MonoBehaviour
                 }
 
            }
-           else if (speed >= DashSpeed)
+            else if (speed >= DashSpeed)
            {
-               rival.RemoveRubbish(dustpercent);
 
-               erb.AddForce(direction * hitforce, ForceMode.Impulse);
+				Debug.LogError ("NeededMash");
+				needMash = true;
+               //rival.RemoveRubbish(dustpercent);
+
+               //erb.AddForce(direction * hitforce, ForceMode.Impulse);
             }
            else
            {

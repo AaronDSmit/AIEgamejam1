@@ -13,6 +13,7 @@ TagManager:
   - p2Metre
   - p1Win
   - p2Win
+  - Playerfront
   layers:
   - Default
   - TransparentFX
