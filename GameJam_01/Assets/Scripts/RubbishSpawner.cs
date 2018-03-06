@@ -24,9 +24,9 @@ public class RubbishSpawner : MonoBehaviour
     {
         for (int i = 0; i < quantitySpawned; i++)
         {
-            Rigidbody rubbish = Instantiate(RubbishPrefabs[Random.Range(0, RubbishPrefabs.Length)], transform.position + Random.onUnitSphere, Quaternion.identity).GetComponent<Rigidbody>();
+            Rigidbody rubbish = Instantiate(RubbishPrefabs[Random.Range(0, RubbishPrefabs.Length)], transform.position + Random.onUnitSphere * Random.Range(0, 3), Quaternion.identity).GetComponent<Rigidbody>();
 
-            rubbish.AddForce(Random.onUnitSphere * 20.0f, ForceMode.Impulse);
+            rubbish.AddForce(Random.onUnitSphere * 15.0f * Random.Range(0, 1), ForceMode.Impulse);
         }
     }
 }

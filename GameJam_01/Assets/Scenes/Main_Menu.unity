@@ -1339,6 +1339,48 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 545897619}
+--- !u!1001 &557339355
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4969977622903908, guid: b08fb86c3c9566a42bf05bd6c3b68c01, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: -7.5881968
+      objectReference: {fileID: 0}
+    - target: {fileID: 4969977622903908, guid: b08fb86c3c9566a42bf05bd6c3b68c01, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0.32617903
+      objectReference: {fileID: 0}
+    - target: {fileID: 4969977622903908, guid: b08fb86c3c9566a42bf05bd6c3b68c01, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: -6.9027586
+      objectReference: {fileID: 0}
+    - target: {fileID: 4969977622903908, guid: b08fb86c3c9566a42bf05bd6c3b68c01, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4969977622903908, guid: b08fb86c3c9566a42bf05bd6c3b68c01, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4969977622903908, guid: b08fb86c3c9566a42bf05bd6c3b68c01, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4969977622903908, guid: b08fb86c3c9566a42bf05bd6c3b68c01, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4969977622903908, guid: b08fb86c3c9566a42bf05bd6c3b68c01, type: 2}
+      propertyPath: m_RootOrder
+      value: 6
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: b08fb86c3c9566a42bf05bd6c3b68c01, type: 2}
+  m_IsPrefabParent: 0
 --- !u!1 &603964378
 GameObject:
   m_ObjectHideFlags: 0
@@ -2871,8 +2913,8 @@ MonoBehaviour:
   flashSpeed: 0.5
   players:
   - {fileID: 1162606814453834, guid: 234ffab1179453747a5a8e673ce57be8, type: 2}
-  - {fileID: 1243652419286572, guid: a2266b5e160718e45b88dcced861558d, type: 2}
-  - {fileID: 1025324955566218, guid: 2cb8722ef0fd4aa4c87e1227d6cda999, type: 2}
+  - {fileID: 0}
+  - {fileID: 0}
   player2Ready: 0
   player1Index: {x: 0, y: 0}
   player2Index: {x: 0, y: 0}
