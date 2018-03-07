@@ -9,8 +9,7 @@ public class Player : MonoBehaviour
 {
 
 
-    [SerializeField]
-    private GameObject playerFront;
+
     [SerializeField]
     private float baseSpeed = 10;
 
@@ -22,14 +21,10 @@ public class Player : MonoBehaviour
     [SerializeField]
     private XboxController controller;
 
-    float TimesMashed = 0;
+
 
     [SerializeField]
     private float Timer = 0.1f;
-    [SerializeField]
-    private float mashtimer = 10;
-
-
 
     private Rigidbody rb;
 
@@ -37,21 +32,13 @@ public class Player : MonoBehaviour
     Vector3 movement;
 
     [SerializeField]
-    private float hitforce = 1000;
+    private float hitforce = 100;
 
-    [Range(0.0f, 1.0f)]
-    public float Mashdustpercent = 0.0f;
 
     [Range(0.0f, 1.0f)]
     public float dustpercent = 0.0f;
 
-    RaycastHit Hit;
-
-    [SerializeField]
-    Player oponent;
     PlayerController rival;
-
-    PlayerController player;
 
 
     private bool dash = false;
@@ -65,11 +52,7 @@ public class Player : MonoBehaviour
     private float prevRotatey;
 
     private float resetTimer;
-    private float resetMTimer;
 
-
-    bool mashhhh = false;
-    bool needMash = false;
 
 
     // Use this for initialization
@@ -79,10 +62,9 @@ public class Player : MonoBehaviour
         prevRotatey = 0.0f;
         speed = baseSpeed;
         resetTimer = Timer;
-        resetMTimer = mashtimer;
 
         rb = GetComponent<Rigidbody>();
-        oponent = GetComponent<Player>();
+
 
     }
 
@@ -90,7 +72,6 @@ public class Player : MonoBehaviour
     void Update()
     {
 
-        buttonMash();
 
         if (!CanMove)
         {
@@ -100,7 +81,7 @@ public class Player : MonoBehaviour
         }
 
         Move();
-        Dash();
+   
 
         if (XCI.GetButtonDown(XboxButton.A, controller))
         {
@@ -115,52 +96,12 @@ public class Player : MonoBehaviour
     }
 
 
-    void buttonMash()
+    private void FixedUpdate()
     {
-        if (needMash)
-        {
-            mashtimer -= Time.fixedDeltaTime;
-            CanMove = false;
-
-            if (XCI.GetButtonUp(XboxButton.A, controller))
-            {
-                mashhhh = true;
-            }
-
-
-
-
-            if (mashhhh)
-            {
-
-
-                ++TimesMashed;
-
-                if (mashtimer <= 0)
-                {
-                    CanMove = true;
-
-                    mashhhh = false;
-                    needMash = false;
-                    TimesMashed = 0;
-                    ResetmashTimer();
-
-                    if (TimesMashed > oponent.TimesMashed)
-                    {
-                        rival.RemoveRubbish(Mashdustpercent);
-
-
-                    }
-                    else
-                    {
-                        player.RemoveRubbish(Mashdustpercent);
-                    }
-                }
-                mashhhh = false;
-            }
-        }
-
+        Dash();
     }
+
+
 
     void Dash()
     {
@@ -190,9 +131,9 @@ public class Player : MonoBehaviour
 
 
 
-    private void OnCollisionEnter(Collision collision)
+    public void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "Player")
+        if (collision.gameObject.CompareTag("Player"))
         {
             rival = collision.gameObject.GetComponent<PlayerController>();
 
@@ -206,13 +147,10 @@ public class Player : MonoBehaviour
 
             direction.Normalize();
 
-
-
-
             if (speed >= DashSpeed)
             {
 
-                needMash = true;
+
                 rival.RemoveRubbish(dustpercent);
 
                 erb.AddForce(direction * hitforce, ForceMode.Impulse);
@@ -222,6 +160,9 @@ public class Player : MonoBehaviour
                 return;
             }
         }
+
+       
+
 
     }
 
@@ -291,42 +232,9 @@ public class Player : MonoBehaviour
         Timer = resetTimer;
     }
 
-    private void ResetmashTimer()
-    {
-        mashtimer = resetMTimer;
-    }
-
     public void setController(XboxController control)
     {
         controller = control;
-    }
-
-    private void OnCollisionStay(Collision collision)
-    {
-        rival = collision.gameObject.GetComponent<PlayerController>();
-
-        GameObject enemy = collision.gameObject;
-
-        Rigidbody erb = enemy.GetComponent<Rigidbody>();
-
-        Vector3 direction = erb.transform.position - transform.position;
-
-        direction.Normalize();
-
-        if (collision.gameObject.tag == "Playerfront")
-        {
-            needMash = true;
-            oponent.needMash = true;
-
-
-            if (mashtimer <= 0)
-            {
-                erb.AddForce(direction * hitforce, ForceMode.Impulse);
-
-
-            }
-
-        }
     }
 
 }
