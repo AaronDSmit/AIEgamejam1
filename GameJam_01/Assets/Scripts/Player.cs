@@ -153,7 +153,7 @@ public class Player : MonoBehaviour
 
                 rival.RemoveRubbish(dustpercent);
 
-                erb.AddForce(direction * hitforce, ForceMode.Impulse);
+                erb.AddRelativeForce(direction * hitforce, ForceMode.Impulse);
             }
             else
             {
