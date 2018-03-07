@@ -141,7 +141,7 @@ public class Player : MonoBehaviour
 
             Rigidbody erb = enemy.GetComponent<Rigidbody>();
 
-            Vector3 direction = erb.transform.position - transform.position;
+            Vector3 direction = (erb.transform.position - rb.transform.position) + rb.velocity;
 
 
 
