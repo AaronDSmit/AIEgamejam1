@@ -51,9 +51,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41735270c213d0346a1ebe8c03ed111a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnRate: 30
+  spawnRate: 10
   quantitySpawned: 50
   RubbishPrefabs:
   - {fileID: 1351044824658292, guid: 35d1e6233ae14f04bbff157268ec2397, type: 2}
-  - {fileID: 1166691113145190, guid: 4b8dabfd9bc977344945b26bb7739816, type: 2}
   - {fileID: 1337035661596504, guid: 59a221852f64ce049a4232761dbf368c, type: 2}
+  - {fileID: 1166691113145190, guid: 4b8dabfd9bc977344945b26bb7739816, type: 2}

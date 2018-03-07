@@ -16,6 +16,7 @@ TagManager:
   - Playerfront
   - p1SpawnPoint
   - p2SpawnPoint
+  - Tie
   layers:
   - Default
   - TransparentFX

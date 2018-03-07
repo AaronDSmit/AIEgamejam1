@@ -11,22 +11,6 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 1859169621855976}
   m_IsPrefabParent: 1
---- !u!1 &1256348478265424
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 4374645634403688}
-  - component: {fileID: 65953874776365386}
-  m_Layer: 0
-  m_Name: Collider
-  m_TagString: Playerfront
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
 --- !u!1 &1339907584327696
 GameObject:
   m_ObjectHideFlags: 0
@@ -96,21 +80,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!1 &1925907368335810
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 4352303115039210}
-  m_Layer: 0
-  m_Name: Pointer
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
 --- !u!1 &1985774281634458
 GameObject:
   m_ObjectHideFlags: 0
@@ -140,8 +109,6 @@ Transform:
   - {fileID: 4578416227376430}
   - {fileID: 4829407651924840}
   - {fileID: 4894245298141294}
-  - {fileID: 4352303115039210}
-  - {fileID: 4374645634403688}
   - {fileID: 4330924292944296}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -157,33 +124,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4225138403063974}
-  m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &4352303115039210
-Transform:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1925907368335810}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 4225138403063974}
   m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &4374645634403688
-Transform:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1256348478265424}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0.568}
-  m_LocalScale: {x: 0.8947651, y: 0.28803778, z: 0.1070647}
-  m_Children: []
-  m_Father: {fileID: 4225138403063974}
-  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4578416227376430
 Transform:
@@ -272,7 +213,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1859169621855976}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 50
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
@@ -280,18 +221,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 116
   m_CollisionDetection: 2
---- !u!65 &65953874776365386
-BoxCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1256348478265424}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!108 &108893831266190922
 Light:
   m_ObjectHideFlags: 1
@@ -339,17 +268,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2498d31ab97d564c8aa75725b7ba36d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerFront: {fileID: 1925907368335810}
   baseSpeed: 10
-  DashSpeed: 50
+  DashSpeed: 25
   controller: 1
-  Timer: 0.1
-  mashtimer: 10
+  Timer: 0.3
   movement: {x: 0, y: 0, z: 0}
-  hitforce: 1000
-  Mashdustpercent: 0
-  dustpercent: 0
-  oponent: {fileID: 0}
+  hitforce: 50
+  rubbishPrefab:
+  - {fileID: 1351044824658292, guid: 35d1e6233ae14f04bbff157268ec2397, type: 2}
+  - {fileID: 1166691113145190, guid: 4b8dabfd9bc977344945b26bb7739816, type: 2}
+  - {fileID: 1337035661596504, guid: 59a221852f64ce049a4232761dbf368c, type: 2}
+  dustpercent: 0.1
 --- !u!114 &114885169541102204
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -361,9 +290,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 580ba17da3c0cea4d9f7b6393082664b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxRubbish: 0
-  RubbishPerPickup: 10
-  dockTime: 0
+  maxRubbish: 100
+  RubbishPerPickup: 5
+  dockTime: 1
+  player1Highlight: {fileID: 21300000, guid: 80224bcd888b93242b932d563a6e4482, type: 3}
+  player2Highlight: {fileID: 21300000, guid: 69326b711389949408e8243c04c2562e, type: 3}
 --- !u!136 &136822082638991504
 CapsuleCollider:
   m_ObjectHideFlags: 1

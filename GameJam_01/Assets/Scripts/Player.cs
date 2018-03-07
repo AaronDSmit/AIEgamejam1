@@ -21,8 +21,6 @@ public class Player : MonoBehaviour
     [SerializeField]
     private XboxController controller;
 
-
-
     [SerializeField]
     private float Timer = 0.1f;
 
@@ -33,6 +31,9 @@ public class Player : MonoBehaviour
 
     [SerializeField]
     private float hitforce = 100;
+
+    [SerializeField]
+    private GameObject[] rubbishPrefab;
 
 
     [Range(0.0f, 1.0f)]
@@ -81,7 +82,7 @@ public class Player : MonoBehaviour
         }
 
         Move();
-   
+
 
         if (XCI.GetButtonDown(XboxButton.A, controller))
         {
@@ -141,19 +142,28 @@ public class Player : MonoBehaviour
 
             Rigidbody erb = enemy.GetComponent<Rigidbody>();
 
-            Vector3 direction = (erb.transform.position - rb.transform.position) + rb.velocity;
+            Vector3 direction = (erb.transform.position - rb.transform.position);
 
-
+            rival.StopDumping();
 
             direction.Normalize();
 
             if (speed >= DashSpeed)
             {
+                if (rival.RubbishPercent > 0)
+                {
+                    rival.RemoveRubbish(dustpercent);
 
+                    Rigidbody rubbish = Instantiate(rubbishPrefab[Random.Range(0, rubbishPrefab.Length)], transform.position + Vector3.up, Quaternion.identity).GetComponent<Rigidbody>();
 
-                rival.RemoveRubbish(dustpercent);
+                    rubbish.AddForce(Vector3.up + Random.onUnitSphere * Random.Range(3, 10), ForceMode.Impulse);
 
-                erb.AddRelativeForce(direction * hitforce, ForceMode.Impulse);
+                    rubbish = Instantiate(rubbishPrefab[Random.Range(0, rubbishPrefab.Length)], transform.position + Vector3.up, Quaternion.identity).GetComponent<Rigidbody>();
+
+                    rubbish.AddForce(Vector3.up + Random.onUnitSphere * Random.Range(3, 10), ForceMode.Impulse);
+
+                    erb.AddForce(direction * hitforce, ForceMode.VelocityChange);
+                }
             }
             else
             {
@@ -161,7 +171,7 @@ public class Player : MonoBehaviour
             }
         }
 
-       
+
 
 
     }

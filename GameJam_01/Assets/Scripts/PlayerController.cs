@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using XboxCtrlrInput;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -14,7 +15,13 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private float dockTime;
 
-    private ParticleSystem rubbishDumpParticle;
+    [SerializeField]
+    private Sprite player1Highlight;
+
+    [SerializeField]
+    private Sprite player2Highlight;
+
+    private GameObject rubbishDumpParticle;
 
     private XboxController controller;
 
@@ -28,7 +35,18 @@ public class PlayerController : MonoBehaviour
     {
         movement = GetComponent<Player>();
 
-        rubbishDumpParticle = GetComponentInChildren<ParticleSystem>();
+        rubbishDumpParticle = GetComponentInChildren<ParticleSystem>().gameObject;
+
+        if (rubbishDumpParticle)
+        {
+            rubbishDumpParticle.SetActive(false);
+        }
+
+    }
+
+    public void StopDumping()
+    {
+        StopAllCoroutines();
     }
 
     public void Reset()
@@ -83,7 +101,7 @@ public class PlayerController : MonoBehaviour
     {
         if (rubbishDumpParticle)
         {
-            rubbishDumpParticle.Play();
+            rubbishDumpParticle.SetActive(true);
         }
 
         float speed = 1 / dockTime;
@@ -105,7 +123,7 @@ public class PlayerController : MonoBehaviour
 
         if (rubbishDumpParticle)
         {
-            rubbishDumpParticle.Stop();
+            rubbishDumpParticle.SetActive(false);
         }
     }
 
@@ -131,6 +149,15 @@ public class PlayerController : MonoBehaviour
         controller = controls;
 
         GetComponent<Player>().setController(controls);
+
+        if (IsPlayerOne())
+        {
+            GetComponentInChildren<SpriteRenderer>().sprite = player1Highlight;
+        }
+        else
+        {
+            GetComponentInChildren<SpriteRenderer>().sprite = player2Highlight;
+        }
     }
 
     public bool IsPlayerOne()

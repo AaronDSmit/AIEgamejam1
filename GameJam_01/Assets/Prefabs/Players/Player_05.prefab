@@ -30,37 +30,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!1 &1114479913943520
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 4144595049821572}
-  - component: {fileID: 65537140932414892}
-  m_Layer: 0
-  m_Name: Collider
-  m_TagString: Playerfront
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!1 &1379769789847656
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 4531184957068766}
-  m_Layer: 0
-  m_Name: Pointer
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
 --- !u!1 &1559088888517412
 GameObject:
   m_ObjectHideFlags: 0
@@ -153,24 +122,9 @@ Transform:
   - {fileID: 4692607596213588}
   - {fileID: 4071258274831786}
   - {fileID: 4424452954788024}
-  - {fileID: 4531184957068766}
-  - {fileID: 4144595049821572}
   - {fileID: 4164532087903286}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &4144595049821572
-Transform:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1114479913943520}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0.568}
-  m_LocalScale: {x: 0.8947651, y: 0.28803778, z: 0.1070647}
-  m_Children: []
-  m_Father: {fileID: 4103072393914804}
-  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4164532087903286
 Transform:
@@ -183,7 +137,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4103072393914804}
-  m_RootOrder: 5
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4424452954788024
 Transform:
@@ -197,19 +151,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4103072393914804}
   m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &4531184957068766
-Transform:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1379769789847656}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 4103072393914804}
-  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4692607596213588
 Transform:
@@ -272,7 +213,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1100179823975328}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 50
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
@@ -280,18 +221,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 116
   m_CollisionDetection: 2
---- !u!65 &65537140932414892
-BoxCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1114479913943520}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!108 &108547166056207424
 Light:
   m_ObjectHideFlags: 1
@@ -339,9 +268,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 580ba17da3c0cea4d9f7b6393082664b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxRubbish: 0
-  RubbishPerPickup: 10
-  dockTime: 0
+  maxRubbish: 100
+  RubbishPerPickup: 5
+  dockTime: 1
+  player1Highlight: {fileID: 21300000, guid: 80224bcd888b93242b932d563a6e4482, type: 3}
+  player2Highlight: {fileID: 21300000, guid: 69326b711389949408e8243c04c2562e, type: 3}
 --- !u!114 &114888747343935622
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -353,17 +284,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2498d31ab97d564c8aa75725b7ba36d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerFront: {fileID: 1379769789847656}
   baseSpeed: 10
-  DashSpeed: 50
+  DashSpeed: 25
   controller: 1
-  Timer: 0.1
-  mashtimer: 10
+  Timer: 0.3
   movement: {x: 0, y: 0, z: 0}
-  hitforce: 1000
-  Mashdustpercent: 0
-  dustpercent: 0
-  oponent: {fileID: 0}
+  hitforce: 50
+  rubbishPrefab:
+  - {fileID: 1351044824658292, guid: 35d1e6233ae14f04bbff157268ec2397, type: 2}
+  - {fileID: 1166691113145190, guid: 4b8dabfd9bc977344945b26bb7739816, type: 2}
+  - {fileID: 1337035661596504, guid: 59a221852f64ce049a4232761dbf368c, type: 2}
+  dustpercent: 0.1
 --- !u!136 &136333743908457148
 CapsuleCollider:
   m_ObjectHideFlags: 1

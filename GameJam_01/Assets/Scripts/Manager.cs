@@ -36,6 +36,7 @@ public class Manager : MonoBehaviour
 
     private GameObject player1Win;
     private GameObject player2Win;
+    private GameObject tie;
 
     private GameObject dockPrompt;
 
@@ -377,7 +378,7 @@ public class Manager : MonoBehaviour
 
     private int MoveX(int value, int change)
     {
-        if (change > 0 && value < 6)
+        if (change > 0 && value < 4)
         {
             return value + 1;
         }
@@ -411,9 +412,13 @@ public class Manager : MonoBehaviour
         {
             player1Win.SetActive(true);
         }
-        else
+        else if (p1Score < p2Score)
         {
             player2Win.SetActive(true);
+        }
+        else
+        {
+            tie.SetActive(true);
         }
 
         Invoke("RestartGame", 3.0f);
@@ -553,8 +558,11 @@ public class Manager : MonoBehaviour
             player1Win = GameObject.FindGameObjectWithTag("p1Win");
             player2Win = GameObject.FindGameObjectWithTag("p2Win");
 
+            tie = GameObject.FindGameObjectWithTag("Tie");
+
             if (player1Win) player1Win.SetActive(false);
             if (player2Win) player2Win.SetActive(false);
+            if (tie) tie.SetActive(false);
 
             Timer = GameObject.FindGameObjectWithTag("Time").GetComponent<Text>();
 
